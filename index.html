@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Companion: Aristotle & Data Vault</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9F7F2;
+            color: #2D3748;
+        }
+
+        h1, h2, .serif-font { font-family: 'Cinzel', serif; }
+        .mono-font { font-family: 'JetBrains Mono', monospace; }
+
+        /* Interactive Element Transitions */
+        .term-card {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        /* Translator Mapping Highlight States */
+        .highlight-amber {
+            background-color: #FEF3C7; /* Amber-100 */
+            border-color: #D97706; /* Amber-600 */
+            transform: scale(1.02);
+            opacity: 1 !important;
+        }
+        
+        .highlight-blue {
+            background-color: #E0F2FE; /* Sky-100 */
+            border-color: #0284C7; /* Sky-600 */
+            transform: scale(1.02);
+            opacity: 1 !important;
+        }
+        
+        .faded { opacity: 0.5; }
+
+        /* Custom Scrollbar for Database Logs */
+        .terminal-scroll::-webkit-scrollbar { width: 6px; }
+        .terminal-scroll::-webkit-scrollbar-track { background: #1e1e1e; }
+        .terminal-scroll::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
+
+        /* Dynamic Line Widths for Simulation Zones */
+        .line-desk { width: 3rem; }
+        .line-kitchen { width: 14rem; }
+
+    </style>
+</head>
+<body class="max-w-5xl mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <header class="text-center mb-10 border-b-2 border-stone-200 pb-6">
+        <h1 class="text-3xl font-bold text-stone-900 mb-2">Aristotle & The Data Vault</h1>
+        <p class="text-stone-500 italic">Interactive Companion to the Article</p>
+    </header>
+
+    <!-- Component 1: The Translator (Concept Mapping) -->
+    <section class="mb-16">
+        <div class="flex justify-between items-end mb-4 px-2">
+            <h2 class="text-xl font-bold text-amber-800">Aristotle (350 BC)</h2>
+            <span class="text-stone-400 text-sm">Hover to connect</span>
+            <h2 class="text-xl font-bold text-sky-800">Data Vault (Modern)</h2>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 md:gap-12 relative">
+            <!-- Center Divider Line -->
+            <div class="absolute left-1/2 top-0 bottom-0 w-px bg-stone-300 transform -translate-x-1/2 hidden md:block"></div>
+
+            <!-- Left Column: Philosophy -->
+            <div class="space-y-3" id="col-aristotle">
+                <!-- Substance -->
+                <div id="ari-substance" class="term-card p-4 border rounded-lg bg-white border-stone-200 cursor-default"
+                     onmouseover="activateLink('substance')" onmouseout="resetLink()">
+                    <div class="font-bold text-amber-700">Substance (Ousia)</div>
+                    <div class="text-xs text-stone-500 mt-1">The thing itself. The anchor of existence.</div>
+                </div>
+
+                <!-- Relation -->
+                <div id="ari-relation" class="term-card p-4 border rounded-lg bg-white border-stone-200 cursor-default"
+                     onmouseover="activateLink('relation')" onmouseout="resetLink()">
+                    <div class="font-bold text-amber-700">Relation</div>
+                    <div class="text-xs text-stone-500 mt-1">"Pros ti" (Toward something). Connections between substances.</div>
+                </div>
+
+                <!-- Accident -->
+                <div id="ari-accident" class="term-card p-4 border rounded-lg bg-white border-stone-200 cursor-default"
+                     onmouseover="activateLink('accident')" onmouseout="resetLink()">
+                    <div class="font-bold text-amber-700">Accident</div>
+                    <div class="text-xs text-stone-500 mt-1">Properties (Quality, Time, Place) that can change.</div>
+                </div>
+            </div>
+
+            <!-- Right Column: Engineering -->
+            <div class="space-y-3" id="col-datavault">
+                <!-- Hub -->
+                <div id="dv-hub" class="term-card p-4 border rounded-lg bg-white border-stone-200 cursor-default"
+                     onmouseover="activateLink('substance')" onmouseout="resetLink()">
+                    <div class="font-bold text-sky-700">Hub</div>
+                    <div class="text-xs text-stone-500 mt-1">Business Key only. Proves the entity exists.</div>
+                </div>
+
+                <!-- Link -->
+                <div id="dv-link" class="term-card p-4 border rounded-lg bg-white border-stone-200 cursor-default"
+                     onmouseover="activateLink('relation')" onmouseout="resetLink()">
+                    <div class="font-bold text-sky-700">Link</div>
+                    <div class="text-xs text-stone-500 mt-1">Unique list of keys. Connects two or more Hubs.</div>
+                </div>
+
+                <!-- Satellite -->
+                <div id="dv-sat" class="term-card p-4 border rounded-lg bg-white border-stone-200 cursor-default"
+                     onmouseover="activateLink('accident')" onmouseout="resetLink()">
+                    <div class="font-bold text-sky-700">Satellite</div>
+                    <div class="text-xs text-stone-500 mt-1">Descriptive data. Insert-only history of changes.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Component 2: The Laboratory (Interactive Simulation) -->
+    <section class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+        <div class="p-6 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
+            <h2 class="text-xl font-bold serif-font text-stone-800">The Laboratory: Object vs. Data</h2>
+            <button onclick="resetSimulation()" class="text-xs text-stone-500 hover:text-red-600 underline">Reset Simulation</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2">
+            
+            <!-- Left Panel: Visual Simulation -->
+            <div class="flex flex-col h-[520px]">
+                
+                <!-- Scene Area -->
+                <div class="flex-1 bg-stone-50 relative overflow-hidden flex flex-col">
+                    
+                    <!-- Split Zones Container -->
+                    <div class="flex h-full w-full">
+                        
+                        <!-- Zone 1: Relation Source (Left) -->
+                        <div class="w-1/3 border-r border-stone-200 bg-white flex flex-col items-center justify-center relative z-20 shadow-sm">
+                            <div class="text-[10px] font-bold text-stone-400 uppercase mb-4 tracking-wider">Relation Hub</div>
+                            <div class="flex flex-col items-center group cursor-pointer transition-transform hover:scale-105" onclick="changeRelation()">
+                                <div id="owner-visual" class="text-5xl transition-all duration-300 filter drop-shadow-sm">🧔</div>
+                                <div id="owner-label" class="text-[10px] font-bold text-stone-500 mt-2 bg-stone-50 px-2 py-0.5 rounded border border-stone-200">NO OWNER</div>
+                            </div>
+                            <!-- Connection Node Visual -->
+                            <div class="absolute right-0 top-1/2 w-3 h-3 bg-stone-300 rounded-full translate-x-1/2 z-30 ring-4 ring-white"></div>
+                        </div>
+
+                        <!-- Zone 2: Object Environment (Right) -->
+                        <div class="w-2/3 relative flex flex-col justify-center bg-stone-50">
+                            
+                            <!-- Vertical Dashed Divider -->
+                            <div class="absolute inset-y-0 left-1/2 border-l-2 border-dashed border-stone-200 z-0"></div>
+
+                            <!-- Background Labels -->
+                            <div class="absolute inset-x-0 bottom-4 flex justify-between px-8 pointer-events-none z-0">
+                                <span class="text-2xl font-bold font-serif text-slate-400">DESK</span>
+                                <span class="text-2xl font-bold font-serif text-slate-400">KITCHEN</span>
+                            </div>
+
+                            <!-- Interactive Object & Connection Line -->
+                            <div class="flex items-center w-full z-10 pl-0 relative">
+                                <!-- Dynamic Connection Line -->
+                                <div id="connection-line" class="h-2 bg-stone-300 relative transition-all duration-500 ease-in-out line-desk rounded-r-full">
+                                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] text-stone-500 font-bold bg-white/90 px-2 py-0.5 rounded shadow-sm border border-stone-100 whitespace-nowrap" id="relation-type-label">owns</div>
+                                </div>
+
+                                <!-- The Object (Hub Entity) -->
+                                <div id="object-container" class="relative w-24 h-24 flex-shrink-0 flex items-center justify-center z-20 -ml-2">
+                                    <div id="object-body" class="text-7xl filter drop-shadow-xl transition-all duration-300">
+                                        ☕
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control Panel (Bottom) -->
+                <div class="bg-white p-4 border-t border-stone-200 z-30">
+                    <!-- State Readout -->
+                    <div class="mb-4 text-center">
+                        <span id="display-state" class="inline-block bg-stone-100 px-3 py-1 rounded-full text-xs font-mono text-stone-600 border border-stone-200">
+                            Loading...
+                        </span>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="changeAccident('color')" class="py-2 px-3 bg-white border border-stone-300 rounded-md hover:bg-stone-50 hover:border-stone-400 text-xs font-bold text-stone-700 shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2">
+                            <span>🎨</span> <span>Paint Object</span>
+                        </button>
+                        <button onclick="changeAccident('location')" class="py-2 px-3 bg-white border border-stone-300 rounded-md hover:bg-stone-50 hover:border-stone-400 text-xs font-bold text-stone-700 shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2">
+                            <span>📍</span> <span>Move Object</span>
+                        </button>
+                        <button onclick="changeRelation()" class="col-span-2 py-2 px-3 bg-amber-50 border border-amber-200 rounded-md hover:bg-amber-100 text-xs font-bold text-amber-800 shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2">
+                            <span>🤝</span> <span>Cycle Relationship</span>
+                        </button>
+                        <button onclick="changeSubstance()" class="col-span-2 py-2 px-3 bg-stone-800 text-white border border-stone-900 rounded-md hover:bg-stone-900 text-xs font-bold shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
+                            <span>✨</span> <span>Replace Substance (New ID)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Database Log -->
+            <div class="bg-[#1e1e1e] p-6 text-stone-300 font-mono text-xs flex flex-col h-[520px]">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="uppercase tracking-widest text-stone-500 font-bold">Database Log</span>
+                    <span class="text-[10px] text-stone-600">LIVE CONNECTION</span>
+                </div>
+
+                <!-- Hub Table (Identity) -->
+                <div class="mb-2">
+                    <div class="text-sky-400 mb-1 font-bold">TABLE: HUB_ITEMS (Substance)</div>
+                    <div class="border border-stone-700 rounded p-2 bg-stone-900/50">
+                        <div class="flex text-stone-500 border-b border-stone-700 pb-1 mb-1">
+                            <span class="w-20">HASH_KEY</span>
+                            <span class="flex-1">ITEM_TYPE</span>
+                        </div>
+                        <div id="hub-row" class="text-green-400">
+                            <!-- JS Populates -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Link Table (Relationships) -->
+                <div class="mb-2">
+                    <div class="text-purple-400 mb-1 font-bold">TABLE: LINK_TRANSACTIONS (Relation)</div>
+                    <div class="border border-stone-700 rounded p-2 bg-stone-900/50">
+                        <div class="flex text-stone-500 border-b border-stone-700 pb-1 mb-1">
+                            <span class="w-16">LINK_ID</span>
+                            <span class="w-16">ACTION</span>
+                            <span class="flex-1 text-right">PARTY_ID</span>
+                        </div>
+                        <div id="link-rows" class="space-y-1">
+                            <!-- JS Populates -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Satellite Table (History/Accidents) -->
+                <div class="flex-1 flex flex-col min-h-0">
+                    <div class="text-amber-400 mb-1 font-bold">TABLE: SAT_ITEM_Details (Accident)</div>
+                    <div class="border border-stone-700 rounded bg-stone-900/50 flex-1 overflow-hidden flex flex-col">
+                        <div class="flex text-stone-500 border-b border-stone-700 p-2 bg-stone-800">
+                            <span class="w-16">TIME</span>
+                            <span class="w-16">COLOR</span>
+                            <span class="flex-1 text-right">LOC</span>
+                        </div>
+                        <div id="sat-rows" class="overflow-y-auto p-2 terminal-scroll space-y-1">
+                            <!-- JS Populates -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center mt-12 text-stone-400 text-xs">
+        <p>Generated by Canvas for "Aristotle Was a Data Engineer"</p>
+    </footer>
+
+    <!-- Interactive Logic -->
+    <script>
+        // --- Component 1: Translator Logic ---
+        function activateLink(type) {
+            document.querySelectorAll('.term-card').forEach(el => el.classList.add('faded'));
+            if (type === 'substance') {
+                highlight('ari-substance', 'highlight-amber');
+                highlight('dv-hub', 'highlight-blue');
+            } else if (type === 'relation') {
+                highlight('ari-relation', 'highlight-amber');
+                highlight('dv-link', 'highlight-blue');
+            } else if (type === 'accident') {
+                highlight('ari-accident', 'highlight-amber');
+                highlight('dv-sat', 'highlight-blue');
+            }
+        }
+
+        function highlight(id, className) {
+            const el = document.getElementById(id);
+            if(el) {
+                el.classList.remove('faded');
+                el.classList.add(className);
+            }
+        }
+
+        function resetLink() {
+            document.querySelectorAll('.term-card').forEach(el => {
+                el.classList.remove('faded', 'highlight-amber', 'highlight-blue');
+            });
+        }
+
+        // --- Component 2: Simulator Logic ---
+        
+        // Data Definitions
+        const substances = [
+            { name: 'Mug', icon: '☕' },
+            { name: 'Teacup', icon: '🍵' },
+            { name: 'Glass', icon: '🥛' },
+            { name: 'Pitcher', icon: '🏺' },
+            { name: 'Bottle', icon: '🍾' }
+        ];
+
+        const owners = [
+            { name: 'Aristotle', icon: '🧔' }, 
+            { name: 'Socrates', icon: '👴' },
+            { name: 'The Bank', icon: '🏦' }
+        ];
+
+        const relationTypes = ['OWNS', 'PURCHASES', 'SELLS'];
+
+        const cssColors = {
+            'Blue': 'text-sky-500 filter drop-shadow-lg',
+            'Red': 'text-red-500 filter drop-shadow-lg',
+            'Green': 'text-emerald-500 filter drop-shadow-lg'
+        };
+
+        // Application State
+        const state = {
+            id: null,
+            substanceIdx: 0,
+            ownerIdx: 0,
+            relationTypeIdx: 0,
+            color: 'Blue',
+            location: 'Desk',
+            history: [],
+            links: [] 
+        };
+
+        function resetSimulation() {
+            changeSubstance(true);
+        }
+
+        function changeSubstance(isReset = false) {
+            // 1. Generate new Business Key / Hash
+            state.id = Math.random().toString(36).substring(2, 8).toUpperCase();
+            
+            // 2. Pick new substance type
+            let newIdx;
+            do {
+                newIdx = Math.floor(Math.random() * substances.length);
+            } while (substances.length > 1 && newIdx === state.substanceIdx && !isReset);
+            state.substanceIdx = newIdx;
+
+            // 3. Reset Attributes
+            state.color = 'Blue'; 
+            state.location = 'Desk'; 
+            state.history = []; 
+            state.links = []; 
+            state.ownerIdx = 0; 
+            state.relationTypeIdx = 0;
+
+            // 4. Animate Transition
+            const objBody = document.getElementById('object-body');
+            objBody.style.transform = "scale(0)"; 
+            
+            setTimeout(() => {
+                logChange(); 
+                logLink();   
+                updateHubUI();
+                
+                // Pop new object in
+                objBody.style.transform = "scale(1)"; 
+                objBody.innerText = substances[state.substanceIdx].icon;
+            }, 200);
+        }
+
+        function changeRelation() {
+            // Cycle Relation Type first, then Owner
+            state.relationTypeIdx = (state.relationTypeIdx + 1) % relationTypes.length;
+            
+            // If cycled full loop, switch owner
+            if (state.relationTypeIdx === 0) {
+                 state.ownerIdx = (state.ownerIdx + 1) % owners.length;
+            }
+            
+            logLink();
+        }
+
+        function changeAccident(type) {
+            if (type === 'color') {
+                const opts = ['Blue', 'Red', 'Green'];
+                let currentIdx = opts.indexOf(state.color);
+                state.color = opts[(currentIdx + 1) % opts.length];
+            } else if (type === 'location') {
+                state.location = state.location === 'Desk' ? 'Kitchen' : 'Desk';
+            }
+            logChange();
+        }
+
+        // --- Logging & UI Updates ---
+
+        function logChange() {
+            const now = new Date();
+            state.history.unshift({
+                time: now.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit' }),
+                color: state.color,
+                location: state.location
+            });
+            updateVisuals();
+            updateSatUI();
+        }
+
+        function logLink() {
+            const linkHash = Math.random().toString(36).substring(2, 6).toUpperCase();
+            state.links.unshift({
+                linkHash: linkHash,
+                itemHash: state.id,
+                owner: owners[state.ownerIdx].name,
+                type: relationTypes[state.relationTypeIdx]
+            });
+            updateVisuals();
+            updateLinkUI();
+        }
+
+        function updateVisuals() {
+            const line = document.getElementById('connection-line');
+            const relationLabel = document.getElementById('relation-type-label');
+            const body = document.getElementById('object-body');
+            const label = document.getElementById('display-state');
+            
+            const ownerVisual = document.getElementById('owner-visual');
+            const ownerLabel = document.getElementById('owner-label');
+
+            const currentSubstance = substances[state.substanceIdx];
+            const currentOwner = owners[state.ownerIdx];
+            const currentRelation = relationTypes[state.relationTypeIdx];
+
+            // Update Position (Line Width Logic)
+            if (state.location === 'Kitchen') {
+                line.classList.remove('line-desk');
+                line.classList.add('line-kitchen');
+            } else {
+                line.classList.remove('line-kitchen');
+                line.classList.add('line-desk');
+            }
+
+            // Update Labels & Icons
+            relationLabel.innerText = currentRelation.toLowerCase();
+            body.className = `text-7xl transition-all duration-300 ${cssColors[state.color]}`;
+            ownerVisual.innerText = currentOwner.icon;
+            ownerLabel.innerText = currentOwner.name.toUpperCase();
+            label.innerText = `${currentSubstance.name} (${state.id}) | ${state.color} | ${state.location}`;
+        }
+
+        function updateHubUI() {
+            const container = document.getElementById('hub-row');
+            const currentSubstance = substances[state.substanceIdx];
+            container.innerHTML = `
+                <div class="flex animate-pulse">
+                    <span class="w-20 font-bold text-sky-400">${state.id}</span>
+                    <span class="flex-1">${currentSubstance.name.toUpperCase()}</span>
+                </div>
+            `;
+            setTimeout(() => {
+                if(container.firstElementChild) container.firstElementChild.classList.remove('animate-pulse');
+            }, 500);
+        }
+
+        function updateLinkUI() {
+            const container = document.getElementById('link-rows');
+            const recentLinks = state.links.slice(0, 3); // Show last 3
+            
+            container.innerHTML = recentLinks.map((row, i) => `
+                <div class="flex ${i === 0 ? 'text-white font-bold bg-white/10' : 'text-stone-500'} p-1 rounded transition-colors text-[10px] md:text-xs">
+                    <span class="w-16">${row.linkHash}</span>
+                    <span class="w-16">${row.type}</span>
+                    <span class="flex-1 text-right">${row.owner}</span>
+                </div>
+            `).join('');
+        }
+
+        function updateSatUI() {
+            const container = document.getElementById('sat-rows');
+            container.innerHTML = state.history.map((row, i) => `
+                <div class="flex ${i === 0 ? 'text-white font-bold bg-white/10' : 'text-stone-500'} p-1 rounded transition-colors text-[10px] md:text-xs">
+                    <span class="w-16">${row.time}</span>
+                    <span class="w-16">${row.color}</span>
+                    <span class="flex-1 text-right">${row.location}</span>
+                </div>
+            `).join('');
+        }
+
+        // Start App
+        resetSimulation();
+    </script>
+</body>
+</html>
